@@ -10,7 +10,7 @@ export function Chip({ children, className }: ChipProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-gp-xs border border-border bg-surface px-gp-sm py-gp-3xs text-mono-small text-text-muted",
+        "inline-flex items-center rounded-full bg-[#F6F7FE] px-3 py-1 text-[13px] font-semibold text-[#606266]",
         className,
       )}
     >

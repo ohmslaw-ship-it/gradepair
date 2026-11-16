@@ -53,18 +53,17 @@ export function AppShellClient({ children }: { children: ReactNode }) {
   const segment = activeSegment(pathname);
 
   return (
-    <div className="flex min-h-0 min-w-0 flex-1">
-      <aside className="flex w-44 shrink-0 flex-col border-r border-border bg-surface">
+    <div className="flex min-h-0 min-w-0 flex-1 gap-4 bg-bg p-4">
+      <aside className="shadow-card flex w-56 shrink-0 flex-col rounded-[28px] bg-surface">
         <Link
           href="/projects"
-          className="border-b border-border px-gp-md py-gp-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"
+          className="px-4 py-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          <span className="text-label text-text-muted">Instrument</span>
-          <span className="mt-gp-2xs block text-h2 tracking-tight">gradepair</span>
+          <span className="text-h2 text-text">gradepair</span>
         </Link>
 
-        <nav aria-label="Workspace" className="flex flex-col border-b border-border py-gp-sm">
-          <p className="px-gp-md py-gp-2xs text-label text-text-muted">Workspace</p>
+        <nav aria-label="Workspace" className="flex flex-col py-2">
+          <p className="px-4 py-1 text-label text-[#6B5BD6]">Workspace</p>
           {workspaceItems.map((item) => {
             const href = item.href(projectId);
             const isActive =
@@ -76,11 +75,11 @@ export function AppShellClient({ children }: { children: ReactNode }) {
                 href={href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "border-l-2 px-gp-md py-gp-xs text-body-small",
+                  "mx-2 px-4 py-2 text-[15px]",
                   isActive
-                    ? "border-accent bg-accent-subtle font-medium text-text"
-                    : "border-transparent text-text-muted hover:bg-surface-hover hover:text-text",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus",
+                    ? "rounded-full bg-[#F1F3FF] font-semibold text-[#050545]"
+                    : "rounded-full text-text-muted hover:bg-surface-hover hover:text-text",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
                 )}
               >
                 {item.label}
@@ -91,9 +90,9 @@ export function AppShellClient({ children }: { children: ReactNode }) {
 
         <nav
           aria-label="Projects"
-          className="flex min-h-0 flex-1 flex-col overflow-y-auto py-gp-sm"
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto py-2"
         >
-          <p className="px-gp-md py-gp-2xs text-label text-text-muted">Projects</p>
+          <p className="px-4 py-1 text-label text-[#6B5BD6]">Projects</p>
           {projects.map((p) => {
             const selected = p.id === projectId;
             const stats =
@@ -109,16 +108,16 @@ export function AppShellClient({ children }: { children: ReactNode }) {
                     : `/projects/${p.id}/compare`
                 }
                 className={cn(
-                  "px-gp-md py-gp-xs",
-                  selected && "bg-surface-recessed",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus",
+                  "mx-2 rounded-full px-4 py-2",
+                  selected && "bg-[#F1F3FF]",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
                 )}
               >
-                <span className="block truncate text-body-small text-text">
+                <span className="block truncate text-[15px] text-text">
                   {p.name}
                 </span>
                 {stats ? (
-                  <span className="block text-mono-small text-text-muted tabular-nums">
+                  <span className="block text-[12px] text-text-muted tabular-nums">
                     {stats} pass · {summarizeCases(p.cases).regressed} reg
                   </span>
                 ) : null}
@@ -127,7 +126,7 @@ export function AppShellClient({ children }: { children: ReactNode }) {
           })}
         </nav>
       </aside>
-      <main className="motion-route min-h-0 min-w-0 flex-1 overflow-auto">
+      <main className="motion-route shadow-panel min-h-0 min-w-0 flex-1 overflow-auto rounded-[28px] bg-surface">
         {children}
       </main>
     </div>
