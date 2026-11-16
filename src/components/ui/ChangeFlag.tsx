@@ -7,48 +7,24 @@ export type ChangeFlagProps = {
   className?: string;
 };
 
-function RegressionIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-      <path
-        d="M3 4L9 8M9 4V8H5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ImprovedIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-      <path
-        d="M9 8L3 4M3 8V4H7"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export function ChangeFlag({ kind, className }: ChangeFlagProps) {
   const isRegression = kind === "regressed";
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-gp-2xs rounded-gp-xs px-gp-sm py-gp-3xs text-label",
-        isRegression
-          ? "bg-regression text-regression-text"
-          : "bg-improved-subtle text-improved",
+        "inline-flex items-center gap-gp-2xs text-mono-small uppercase",
+        isRegression ? "text-regression" : "text-improved",
         className,
       )}
     >
-      {isRegression ? <RegressionIcon /> : <ImprovedIcon />}
-      {isRegression ? "REGRESSED" : "IMPROVED"}
+      <span
+        aria-hidden
+        className={cn(
+          "size-2 rounded-gp-xs",
+          isRegression ? "bg-regression" : "bg-improved",
+        )}
+      />
+      {isRegression ? "Regressed" : "Improved"}
     </span>
   );
 }

@@ -1,59 +1,56 @@
 @import "tailwindcss";
 
-/*
- * Gradepair tokens (call1.js). Spacing/radius use `--spacing-gp-*` and
- * `--radius-gp-*` in @theme so we do not override Tailwind's default
- * spacing scale (max-w-md, w-xl, …) or default radius keys.
- */
+/* Lab instrument tokens — semantic names stable for screens/components */
 
 :root {
-  --gp-bg: #fbf4e9;
+  --gp-bg: #f4f4f2;
   --gp-surface: #ffffff;
-  --gp-surface-recessed: #f7eedf;
-  --gp-surface-hover: #f2e7d5;
-  --gp-text: #211c18;
-  --gp-text-muted: #6a5f54;
-  --gp-text-on-accent: #211c18;
-  --gp-border: #e8dcca;
-  --gp-border-strong: #211c18;
-  --gp-accent: #ffb224;
-  --gp-accent-subtle: #ffd27a;
-  --gp-pass: #17794a;
-  --gp-pass-subtle: #ddf3e4;
-  --gp-fail: #c8291e;
-  --gp-fail-subtle: #fce4e1;
-  --gp-regression: #ffe27a;
-  --gp-regression-text: #211c18;
-  --gp-improved: #17794a;
-  --gp-improved-subtle: #ddf3e4;
-  --gp-focus: #2456d6;
-  --gp-diff-added: #ddf3e4;
-  --gp-diff-removed: #fce4e1;
+  --gp-surface-recessed: #ebebe8;
+  --gp-surface-hover: #ebebe8;
+  --gp-text: #0e0e0c;
+  --gp-text-muted: #5a5a55;
+  --gp-text-on-accent: #ffffff;
+  --gp-border: #d9d9d4;
+  --gp-border-strong: #0e0e0c;
+  --gp-accent: #2e3bff;
+  --gp-accent-subtle: #e8eaff;
+  --gp-pass: #0f8a4b;
+  --gp-pass-subtle: #e6f4ed;
+  --gp-fail: #e5341d;
+  --gp-fail-subtle: #fdeae7;
+  --gp-regression: #c77700;
+  --gp-regression-text: #0e0e0c;
+  --gp-improved: #0f8a4b;
+  --gp-improved-subtle: #e6f4ed;
+  --gp-focus: #2e3bff;
+  --gp-diff-added: #e6f4ed;
+  --gp-diff-removed: #fdeae7;
+  --gp-motion-fast: 140ms;
 }
 
 @theme inline {
-  --color-bg: #fbf4e9;
+  --color-bg: #f4f4f2;
   --color-surface: #ffffff;
-  --color-surface-recessed: #f7eedf;
-  --color-surface-hover: #f2e7d5;
-  --color-text: #211c18;
-  --color-text-muted: #6a5f54;
-  --color-text-on-accent: #211c18;
-  --color-border: #e8dcca;
-  --color-border-strong: #211c18;
-  --color-accent: #ffb224;
-  --color-accent-subtle: #ffd27a;
-  --color-pass: #17794a;
-  --color-pass-subtle: #ddf3e4;
-  --color-fail: #c8291e;
-  --color-fail-subtle: #fce4e1;
-  --color-regression: #ffe27a;
-  --color-regression-text: #211c18;
-  --color-improved: #17794a;
-  --color-improved-subtle: #ddf3e4;
-  --color-focus: #2456d6;
-  --color-diff-added: #ddf3e4;
-  --color-diff-removed: #fce4e1;
+  --color-surface-recessed: #ebebe8;
+  --color-surface-hover: #ebebe8;
+  --color-text: #0e0e0c;
+  --color-text-muted: #5a5a55;
+  --color-text-on-accent: #ffffff;
+  --color-border: #d9d9d4;
+  --color-border-strong: #0e0e0c;
+  --color-accent: #2e3bff;
+  --color-accent-subtle: #e8eaff;
+  --color-pass: #0f8a4b;
+  --color-pass-subtle: #e6f4ed;
+  --color-fail: #e5341d;
+  --color-fail-subtle: #fdeae7;
+  --color-regression: #c77700;
+  --color-regression-text: #0e0e0c;
+  --color-improved: #0f8a4b;
+  --color-improved-subtle: #e6f4ed;
+  --color-focus: #2e3bff;
+  --color-diff-added: #e6f4ed;
+  --color-diff-removed: #fdeae7;
 
   --spacing-gp-3xs: 2px;
   --spacing-gp-2xs: 4px;
@@ -67,11 +64,11 @@
   --spacing-gp-4xl: 40px;
   --spacing-gp-5xl: 48px;
 
-  --radius-gp-xs: 4px;
-  --radius-gp-sm: 6px;
-  --radius-gp-md: 8px;
-  --radius-gp-lg: 12px;
-  --radius-gp-full: 999px;
+  --radius-gp-xs: 2px;
+  --radius-gp-sm: 4px;
+  --radius-gp-md: 4px;
+  --radius-gp-lg: 4px;
+  --radius-gp-full: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -88,33 +85,38 @@
 body {
   background-color: var(--gp-bg);
   color: var(--gp-text);
-  font-family: var(--font-body), system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 .text-display {
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-size: 40px;
-  line-height: 44px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
 }
 
 .text-h1 {
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-size: 28px;
-  line-height: 34px;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 22px;
+  line-height: 26px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .text-h2 {
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-size: 18px;
-  line-height: 24px;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .text-body-strong {
@@ -129,32 +131,69 @@ body {
 .text-note {
   font-size: 12px;
   line-height: 16px;
-  font-style: italic;
+  color: var(--gp-text-muted);
 }
 
 .text-label {
-  font-size: 11px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
   line-height: 14px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .text-mono {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
 }
 
 .text-mono-small {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
   line-height: 16px;
+  font-variant-numeric: tabular-nums;
 }
 
-.text-grade {
-  font-family: var(--font-grade), cursive;
-  font-size: 19px;
-  line-height: 20px;
-  font-weight: 700;
+.text-score {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 56px;
+  line-height: 56px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0 var(--spacing-gp-lg);
+  padding-inline: var(--spacing-gp-2xl);
+}
+
+.lab-col-full {
+  grid-column: 1 / -1;
+}
+
+.motion-route {
+  animation: route-in var(--gp-motion-fast) ease-out;
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-route {
+    animation: none;
+  }
 }

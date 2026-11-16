@@ -6,64 +6,38 @@ export type Grade = "pass" | "fail";
 export type GradeTagProps = {
   grade: Grade | null;
   className?: string;
+  compact?: boolean;
 };
 
-function PassIcon() {
+function StatusSquare({ tone }: { tone: "pass" | "fail" | "muted" }) {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
+    <span
       aria-hidden
-      className="shrink-0"
-    >
-      <path
-        d="M3 8.5L6.2 11.5 13 4.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      className={cn(
+        "inline-block size-2 shrink-0 rounded-gp-xs",
+        tone === "pass" && "bg-pass",
+        tone === "fail" && "bg-fail",
+        tone === "muted" && "bg-border",
+      )}
+    />
   );
 }
 
-function FailIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden
-      className="shrink-0"
-    >
-      <path
-        d="M4 4L12 12M12 4L4 12"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-export function GradeTag({ grade, className }: GradeTagProps) {
+export function GradeTag({ grade, className, compact = true }: GradeTagProps) {
   if (grade === null) {
     return <Chip className={className}>Ungraded</Chip>;
   }
-  const isPass = grade === "pass";
+  const label = grade === "pass" ? "PASS" : "FAIL";
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-gp-2xs rounded-gp-full border px-gp-sm py-gp-3xs",
-        isPass ? "border-pass text-pass" : "border-fail text-fail",
+        "inline-flex items-center gap-gp-2xs font-mono text-mono-small uppercase",
+        grade === "pass" ? "text-pass" : "text-fail",
         className,
       )}
     >
-      {isPass ? <PassIcon /> : <FailIcon />}
-      <span className="text-grade">{isPass ? "Pass" : "Fail"}</span>
+      <StatusSquare tone={grade} />
+      {compact ? label : label.toLowerCase()}
     </span>
   );
 }

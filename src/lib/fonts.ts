@@ -1,37 +1,15 @@
-import {
-  Bricolage_Grotesque,
-  Caveat,
-  Geist_Mono,
-  Hanken_Grotesk,
-} from "next/font/google";
+import { IBM_Plex_Mono, Schibsted_Grotesk } from "next/font/google";
 
-export const fontDisplay = Bricolage_Grotesque({
+export const fontUi = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["700", "800"],
+  variable: "--font-ui",
+  weight: ["400", "500", "600", "700"],
 });
 
-export const fontBody = Hanken_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
-});
-
-export const fontMono = Geist_Mono({
+export const fontMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  weight: ["400", "500", "600"],
 });
 
-export const fontGrade = Caveat({
-  subsets: ["latin"],
-  variable: "--font-grade",
-  weight: ["700"],
-});
-
-export const fontClassNames = [
-  fontDisplay.variable,
-  fontBody.variable,
-  fontMono.variable,
-  fontGrade.variable,
-].join(" ");
+export const fontClassNames = [fontUi.variable, fontMono.variable].join(" ");

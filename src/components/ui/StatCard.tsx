@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { StatReadout } from "@/components/ui/StatReadout";
 
+/** @deprecated Use StatReadout inside StatReadoutStrip */
 export type StatCardProps = {
   label: string;
   value: ReactNode;
@@ -8,19 +9,6 @@ export type StatCardProps = {
   className?: string;
 };
 
-export function StatCard({ label, value, detail, className }: StatCardProps) {
-  return (
-    <div
-      className={cn(
-        "rounded-gp-lg border border-border bg-surface p-gp-lg",
-        className,
-      )}
-    >
-      <p className="text-label text-text-muted">{label}</p>
-      <p className="mt-gp-sm text-h2">{value}</p>
-      {detail ? (
-        <p className="mt-gp-2xs text-body-small text-text-muted">{detail}</p>
-      ) : null}
-    </div>
-  );
+export function StatCard(props: StatCardProps) {
+  return <StatReadout {...props} large={false} />;
 }

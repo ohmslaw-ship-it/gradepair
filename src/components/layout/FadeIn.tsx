@@ -10,7 +10,7 @@ export function FadeIn({ children }: { children: ReactNode }) {
       initial={reduceMotion ? false : { opacity: 0, y: 6 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
+      transition={{ duration: 0.14, ease: "easeOut" }}
     >
       {children}
     </motion.section>

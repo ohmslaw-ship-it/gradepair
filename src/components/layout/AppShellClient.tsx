@@ -11,7 +11,7 @@ const workspaceItems = [
   { segment: "projects", label: "Projects", href: () => "/projects" },
   {
     segment: "cases",
-    label: "Test cases",
+    label: "Cases",
     href: (id?: string) => (id ? `/projects/${id}/cases` : "/projects"),
   },
   {
@@ -29,7 +29,6 @@ const workspaceItems = [
     label: "Report",
     href: (id?: string) => (id ? `/projects/${id}/report` : "/projects"),
   },
-  { segment: "settings", label: "Settings", href: () => "/projects" },
 ] as const;
 
 function activeProjectId(pathname: string): string | undefined {
@@ -38,9 +37,7 @@ function activeProjectId(pathname: string): string | undefined {
 }
 
 function activeSegment(pathname: string): string {
-  if (pathname === "/projects" || pathname.startsWith("/projects?")) {
-    return "projects";
-  }
+  if (pathname === "/projects") return "projects";
   if (pathname.includes("/cases")) return "cases";
   if (pathname.includes("/prompts")) return "prompts";
   if (pathname.includes("/compare")) return "compare";
@@ -57,24 +54,17 @@ export function AppShellClient({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1">
-      <aside className="flex w-56 shrink-0 flex-col border-r border-border bg-surface px-gp-md py-gp-lg">
+      <aside className="flex w-44 shrink-0 flex-col border-r border-border bg-surface">
         <Link
           href="/projects"
-          className="mb-gp-xl flex items-center gap-gp-sm px-gp-sm rounded-gp-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="border-b border-border px-gp-md py-gp-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus"
         >
-          <span
-            className="flex size-8 items-center justify-center rounded-gp-md bg-border-strong text-body-small font-semibold text-surface"
-            aria-hidden
-          >
-            g
-          </span>
-          <span className="text-h2">gradepair</span>
+          <span className="text-label text-text-muted">Instrument</span>
+          <span className="mt-gp-2xs block text-h2 tracking-tight">gradepair</span>
         </Link>
 
-        <nav aria-label="Workspace" className="flex flex-col gap-gp-2xs">
-          <p className="mb-gp-2xs px-gp-sm text-label text-text-muted">
-            Workspace
-          </p>
+        <nav aria-label="Workspace" className="flex flex-col border-b border-border py-gp-sm">
+          <p className="px-gp-md py-gp-2xs text-label text-text-muted">Workspace</p>
           {workspaceItems.map((item) => {
             const href = item.href(projectId);
             const isActive =
@@ -86,11 +76,11 @@ export function AppShellClient({ children }: { children: ReactNode }) {
                 href={href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "rounded-gp-md px-gp-sm py-gp-xs text-body-small",
+                  "border-l-2 px-gp-md py-gp-xs text-body-small",
                   isActive
-                    ? "bg-surface-hover font-semibold text-text"
-                    : "text-text hover:bg-surface-hover",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+                    ? "border-accent bg-accent-subtle font-medium text-text"
+                    : "border-transparent text-text-muted hover:bg-surface-hover hover:text-text",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus",
                 )}
               >
                 {item.label}
@@ -101,57 +91,45 @@ export function AppShellClient({ children }: { children: ReactNode }) {
 
         <nav
           aria-label="Projects"
-          className="mt-gp-xl flex min-h-0 flex-1 flex-col gap-gp-2xs overflow-y-auto"
+          className="flex min-h-0 flex-1 flex-col overflow-y-auto py-gp-sm"
         >
-          <p className="mb-gp-2xs px-gp-sm text-label text-text-muted">
-            Projects
-          </p>
+          <p className="px-gp-md py-gp-2xs text-label text-text-muted">Projects</p>
           {projects.map((p) => {
             const selected = p.id === projectId;
             const stats =
               p.cases.length > 0 && !p.hideCounts
-                ? (() => {
-                    const { regressed } = summarizeCases(p.cases);
-                    const passes = passCount(p.cases, "B");
-                    return `${passes}/${p.cases.length} pass · ${regressed} reg`;
-                  })()
+                ? `${passCount(p.cases, "B")}/${p.cases.length}`
                 : null;
             return (
               <Link
                 key={p.id}
-                href={`/projects/${p.id}/compare`}
+                href={
+                  p.cases.length === 0
+                    ? `/projects/${p.id}/cases`
+                    : `/projects/${p.id}/compare`
+                }
                 className={cn(
-                  "rounded-gp-md px-gp-sm py-gp-xs",
-                  selected ? "bg-accent-subtle" : "hover:bg-surface-hover",
-                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+                  "px-gp-md py-gp-xs",
+                  selected && "bg-surface-recessed",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-focus",
                 )}
               >
-                <span className="flex items-center gap-gp-sm">
-                  {selected ? (
-                    <span
-                      className="size-1.5 shrink-0 rounded-gp-full bg-accent"
-                      aria-hidden
-                    />
-                  ) : (
-                    <span className="size-1.5 shrink-0" aria-hidden />
-                  )}
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-body-small text-text">
-                      {p.name}
-                    </span>
-                    {stats ? (
-                      <span className="block truncate text-body-small text-text-muted">
-                        {stats}
-                      </span>
-                    ) : null}
-                  </span>
+                <span className="block truncate text-body-small text-text">
+                  {p.name}
                 </span>
+                {stats ? (
+                  <span className="block text-mono-small text-text-muted tabular-nums">
+                    {stats} pass · {summarizeCases(p.cases).regressed} reg
+                  </span>
+                ) : null}
               </Link>
             );
           })}
         </nav>
       </aside>
-      <main className="min-h-0 min-w-0 flex-1 overflow-auto">{children}</main>
+      <main className="motion-route min-h-0 min-w-0 flex-1 overflow-auto">
+        {children}
+      </main>
     </div>
   );
 }
