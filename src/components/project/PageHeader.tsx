@@ -18,38 +18,42 @@ export function PageHeader({
   badge,
 }: PageHeaderProps) {
   return (
-    <header className="border-b border-border bg-bg px-gp-2xl py-gp-xl">
-      <nav aria-label="Breadcrumb" className="text-body-small text-text-muted">
-        <ol className="flex flex-wrap items-center gap-gp-xs">
-          {breadcrumbs.map((crumb, i) => (
-            <li key={crumb.label} className="flex items-center gap-gp-xs">
-              {i > 0 ? <span aria-hidden>/</span> : null}
-              {crumb.href ? (
-                <Link
-                  href={crumb.href}
-                  className="hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus rounded-gp-xs"
-                >
-                  {crumb.label}
-                </Link>
-              ) : (
-                <span className="text-text">{crumb.label}</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
-      <div className="mt-gp-md flex flex-wrap items-start justify-between gap-gp-lg">
-        <div className="min-w-0 max-w-3xl">
-          <div className="flex flex-wrap items-center gap-gp-sm">
+    <header className="border-b border-border bg-bg">
+      <div className="lab-grid items-end gap-y-gp-md py-gp-xl">
+        <div className="col-span-12 lg:col-span-8">
+          <nav aria-label="Breadcrumb" className="text-mono-small text-text-muted">
+            <ol className="flex flex-wrap items-center gap-gp-xs">
+              {breadcrumbs.map((crumb, i) => (
+                <li key={crumb.label} className="flex items-center gap-gp-xs">
+                  {i > 0 ? <span aria-hidden>/</span> : null}
+                  {crumb.href ? (
+                    <Link
+                      href={crumb.href}
+                      className="hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                    >
+                      {crumb.label}
+                    </Link>
+                  ) : (
+                    <span className="text-text">{crumb.label}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+          <div className="mt-gp-md flex flex-wrap items-baseline gap-gp-md">
             <h1 className="text-h1">{title}</h1>
             {badge ? <Chip>{badge}</Chip> : null}
           </div>
           {meta ? (
-            <p className="mt-gp-sm text-body-small text-text-muted">{meta}</p>
+            <p className="mt-gp-sm max-w-3xl text-body-small text-text-muted">
+              {meta}
+            </p>
           ) : null}
         </div>
         {actions ? (
-          <div className="flex flex-wrap gap-gp-md">{actions}</div>
+          <div className="col-span-12 flex flex-wrap justify-start gap-gp-sm lg:col-span-4 lg:justify-end">
+            {actions}
+          </div>
         ) : null}
       </div>
     </header>

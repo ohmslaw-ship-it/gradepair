@@ -5,7 +5,8 @@ import { ChangeFlag } from "@/components/ui/ChangeFlag";
 import { Chip } from "@/components/ui/Chip";
 import { GradeTag } from "@/components/ui/GradeTag";
 import { MonoBlock } from "@/components/ui/MonoBlock";
-import { StatCard } from "@/components/ui/StatCard";
+import { StatReadout } from "@/components/ui/StatReadout";
+import { StatReadoutStrip } from "@/components/ui/StatReadoutStrip";
 import { SAMPLE_ADSGPT_PROJECT } from "@/data/sample";
 import { caseChangeFlag, summarizeCases } from "@/lib/metrics";
 
@@ -32,7 +33,7 @@ function Section({
 }) {
   return (
     <FadeIn>
-      <section className="mb-gp-3xl rounded-gp-lg border border-border bg-surface p-gp-xl">
+      <section className="mb-gp-3xl rounded-gp-sm border border-border bg-surface p-gp-xl">
         <h2 className="text-h2 mb-gp-lg">{title}</h2>
         {children}
       </section>
@@ -47,8 +48,8 @@ export default function Home() {
   return (
     <div className="bg-bg p-gp-2xl">
       <header className="mb-gp-2xl max-w-3xl">
-        <p className="text-label text-text-muted">Stage 3 · Foundations</p>
-        <h1 className="text-h1 mt-gp-sm">Gradepair kitchen sink</h1>
+        <p className="text-label text-text-muted">Lab instrument · tokens</p>
+        <h1 className="text-h1 mt-gp-sm">Kitchen sink</h1>
         <p className="mt-gp-md text-text-muted">
           Unit tests for your AI feature, built for PMs, not engineers. This
           page validates design tokens, typography, and base components before
@@ -77,15 +78,15 @@ export default function Home() {
           <p className="text-display">Display</p>
           <p className="text-h1">Heading 1</p>
           <p className="text-h2">Heading 2</p>
-          <p>Body — Hanken Grotesk 14/20</p>
+          <p>Body — Schibsted Grotesk 13/18</p>
           <p className="font-semibold">Body strong</p>
           <p className="text-body-small text-text-muted">Body small / muted</p>
-          <p className="text-note text-text-muted">Note italic</p>
+          <p className="text-note">Note / secondary</p>
           <p className="text-label text-text-muted">Label caps</p>
           <p className="text-mono bg-surface-recessed rounded-gp-sm p-gp-sm">
-            Mono — Geist Mono 13/20
+            Mono — IBM Plex Mono 12/18
           </p>
-          <p className="text-grade text-pass">Grade — Caveat</p>
+          <p className="text-score tabular-nums">7/10</p>
         </div>
       </Section>
 
@@ -103,12 +104,12 @@ export default function Home() {
           <Chip>Sample data</Chip>
           <Chip>edge case</Chip>
         </div>
-        <div className="mt-gp-lg grid gap-gp-md sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Prompt A passes" value="14/20" detail="70% · v3" />
-          <StatCard label="Prompt B passes" value="17/20" detail="85% · v4" />
-          <StatCard label="Improved" value={String(improved)} />
-          <StatCard label="Regressions" value={String(regressed)} />
-        </div>
+        <StatReadoutStrip className="mt-gp-lg">
+          <StatReadout label="Prompt A" value="7/10" detail="70% · v3" />
+          <StatReadout label="Prompt B" value="8/10" detail="80% · v4" />
+          <StatReadout label="Improved" value={String(improved)} large={false} />
+          <StatReadout label="Regressed" value={String(regressed)} large={false} />
+        </StatReadoutStrip>
         <div className="mt-gp-lg max-w-xl">
           <MonoBlock header="Prompt B · v4 · 34 tokens">
             {previewCase.outputB}

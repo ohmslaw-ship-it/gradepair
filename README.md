@@ -7,9 +7,10 @@ Gradepair lets product people compare prompt A vs B on plain-language test cases
 ## Stack
 
 - Next.js (App Router, TypeScript)
-- Tailwind CSS v4 — design tokens in `src/app/globals.css` (`@theme` + `gp` spacing/radius namespace)
+- Tailwind CSS v4 — **Lab instrument** tokens in `src/app/globals.css` (`@theme` + `gp` spacing/radius namespace)
 - Zustand + `localStorage` for edits and grades
 - Motion for React (subtle transitions; `prefers-reduced-motion` respected)
+- Fonts: Schibsted Grotesk (UI), IBM Plex Mono (data) via `next/font/google`
 
 ## Getting started
 
@@ -40,7 +41,7 @@ Demo seed data lives in `src/data/` (`SEED_PROJECTS`). The **Hinglish notificati
 
 ## Project status
 
-**Stage 4: product screens** — All six flows above, local persistence, honest demo banner. Live API runs and auth are out of scope.
+**Stage 4 + Lab instrument UI** — Product screens with dense tables, stat readout strip, ultramarine accent, hairline grid. Live API runs and auth are out of scope.
 
 ## License
 

@@ -21,7 +21,7 @@ function PromptCard({
   id: string;
 }) {
   return (
-    <article className="flex h-full min-h-[20rem] flex-col rounded-gp-lg border border-border bg-surface">
+    <article className="flex h-full min-h-[20rem] flex-col rounded-gp-sm border border-border bg-surface">
       <header className="flex items-center justify-between border-b border-border px-gp-lg py-gp-md">
         <h2 className="text-h2">{label}</h2>
         <span className="text-label text-text-muted">{version}</span>

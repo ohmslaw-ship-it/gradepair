@@ -6,10 +6,12 @@ import { EmptyCasesPanel } from "@/components/project/EmptyCasesPanel";
 import { ChangeFlag } from "@/components/ui/ChangeFlag";
 import { Chip } from "@/components/ui/Chip";
 import { GradeTag } from "@/components/ui/GradeTag";
-import { MonoBlock } from "@/components/ui/MonoBlock";
-import { StatCard } from "@/components/ui/StatCard";
+import { StatReadout } from "@/components/ui/StatReadout";
+import { StatReadoutStrip } from "@/components/ui/StatReadoutStrip";
+import { cn } from "@/lib/cn";
 import { caseChangeFlag, passCount, summarizeCases } from "@/lib/metrics";
 import type { Project } from "@/lib/types";
+
 export function ReportView({ project }: { project: Project }) {
   const total = project.cases.length;
   const stats = summarizeCases(project.cases);
@@ -32,10 +34,12 @@ export function ReportView({ project }: { project: Project }) {
     );
   }
 
-  const shipCall =
+  const ship =
     stats.regressed === 0
-      ? "Candidate B clears the bar on regressions."
-      : `Hold B until ${stats.regressed} regression case${stats.regressed === 1 ? "" : "s"} ${stats.regressed === 1 ? "is" : "are"} addressed.`;
+      ? { verdict: "Ship B", tone: "text-pass" }
+      : passB >= passA && stats.regressed <= 2
+        ? { verdict: "Ship B with fixes", tone: "text-regression" }
+        : { verdict: "Hold B", tone: "text-fail" };
 
   return (
     <div className="min-h-full bg-bg">
@@ -45,62 +49,41 @@ export function ReportView({ project }: { project: Project }) {
           { label: project.name, href: `/projects/${project.id}/compare` },
           { label: "Report" },
         ]}
-        title="Results & regressions"
-        meta={`${project.name} · ${project.lastRunLabel}`}
-        badge="Sample data"
-        actions={
-          <Link
-            href={`/projects/${project.id}/compare`}
-            className="text-body-small font-semibold text-text underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus rounded-gp-xs"
-          >
-            Back to compare
-          </Link>
-        }
+        title="Results"
+        meta={project.lastRunLabel}
+        badge="Sample"
       />
 
-      <div className="grid gap-gp-lg p-gp-2xl lg:grid-cols-2 xl:grid-cols-4">
-        <StatCard
-          label="Prompt A pass rate"
-          value={`${Math.round((passA / total) * 100)}%`}
-          detail={`${passA}/${total} · ${project.promptA.version}`}
-        />
-        <StatCard
-          label="Prompt B pass rate"
-          value={`${Math.round((passB / total) * 100)}%`}
-          detail={`${passB}/${total} · ${project.promptB.version}`}
-        />
-        <StatCard
-          label="Improved"
-          value={String(stats.improved)}
-          detail="Fail in A → pass in B"
-        />
-        <StatCard
-          label="Regressed"
-          value={String(stats.regressed)}
-          detail="Pass in A → fail in B"
-        />
-      </div>
-
-      <section className="border-t border-border px-gp-2xl py-gp-xl" aria-labelledby="ship-call">
-        <h2 id="ship-call" className="text-h2">
-          Ship call
-        </h2>
-        <p className="mt-gp-sm max-w-2xl text-body-small text-text">
-          {shipCall} Unchanged pass: {stats.unchanged} cases. This is a demo
-          suggestion — adjust grades in{" "}
-          <Link
-            href={`/projects/${project.id}/compare`}
-            className="font-semibold underline-offset-2 hover:underline"
-          >
-            Compare
-          </Link>{" "}
-          to update.
+      <section className="border-b border-border px-gp-2xl py-gp-2xl">
+        <p className="text-label text-text-muted">Verdict</p>
+        <p className={cn("mt-gp-md text-display tracking-tight", ship.tone)}>
+          {ship.verdict}
+        </p>
+        <p className="mt-gp-lg max-w-2xl text-body-small text-text-muted">
+          {stats.regressed === 0
+            ? "No regressions in the sample set. Review improved cases before promoting prompt B."
+            : `${stats.regressed} case${stats.regressed === 1 ? "" : "s"} regressed (pass A → fail B). Address these before ship.`}
         </p>
       </section>
 
-      <div className="overflow-x-auto px-gp-2xl pb-gp-2xl">
-        <table className="w-full min-w-[72rem] border-collapse text-left text-body-small">
-          <caption className="sr-only">Per-case results</caption>
+      <StatReadoutStrip>
+        <StatReadout
+          label="Prompt A"
+          value={`${passA}/${total}`}
+          detail={`${Math.round((passA / total) * 100)}%`}
+        />
+        <StatReadout
+          label="Prompt B"
+          value={`${passB}/${total}`}
+          detail={`${Math.round((passB / total) * 100)}%`}
+        />
+        <StatReadout label="Improved" value={String(stats.improved)} />
+        <StatReadout label="Regressed" value={String(stats.regressed)} />
+      </StatReadoutStrip>
+
+      <div className="overflow-x-auto px-gp-2xl py-gp-xl">
+        <table className="w-full min-w-[72rem] border-collapse text-left">
+          <caption className="sr-only">Per-case report</caption>
           <thead>
             <tr className="border-b border-border text-label text-text-muted">
               <th scope="col" className="w-14 px-gp-md py-gp-sm">
@@ -115,10 +98,10 @@ export function ReportView({ project }: { project: Project }) {
               <th scope="col" className="min-w-[18rem] px-gp-md py-gp-sm">
                 Output B
               </th>
-              <th scope="col" className="w-32 px-gp-md py-gp-sm">
+              <th scope="col" className="w-28 px-gp-md py-gp-sm">
                 Grades
               </th>
-              <th scope="col" className="w-36 px-gp-md py-gp-sm">
+              <th scope="col" className="w-28 px-gp-md py-gp-sm">
                 Change
               </th>
             </tr>
@@ -128,31 +111,17 @@ export function ReportView({ project }: { project: Project }) {
               const flag = caseChangeFlag(c.gradeA, c.gradeB);
               return (
                 <tr key={c.id} className="border-b border-border align-top">
-                  <td className="px-gp-md py-gp-md text-mono-small text-text-muted">
+                  <td className="px-gp-md py-gp-md text-mono-small tabular-nums text-text-muted">
                     {String(index + 1).padStart(2, "0")}
                   </td>
                   <td className="px-gp-md py-gp-md">
-                    <p className="font-semibold text-text">{c.input}</p>
-                    <p className="mt-gp-2xs text-note text-text-muted">
+                    <p className="text-body-small font-medium">{c.input}</p>
+                    <p className="mt-gp-2xs text-mono-small text-text-muted">
                       {c.passRule}
                     </p>
                   </td>
-                  <td className="px-gp-md py-gp-md">
-                    <MonoBlock>{c.outputA}</MonoBlock>
-                    {c.noteA ? (
-                      <p className="mt-gp-2xs text-body-small text-text-muted">
-                        {c.noteA}
-                      </p>
-                    ) : null}
-                  </td>
-                  <td className="px-gp-md py-gp-md">
-                    <MonoBlock>{c.outputB}</MonoBlock>
-                    {c.noteB ? (
-                      <p className="mt-gp-2xs text-body-small text-text-muted">
-                        {c.noteB}
-                      </p>
-                    ) : null}
-                  </td>
+                  <td className="px-gp-md py-gp-md text-mono">{c.outputA}</td>
+                  <td className="px-gp-md py-gp-md text-mono">{c.outputB}</td>
                   <td className="px-gp-md py-gp-md">
                     <div className="flex flex-col gap-gp-2xs">
                       <GradeTag grade={c.gradeA} />
@@ -164,10 +133,8 @@ export function ReportView({ project }: { project: Project }) {
                       <ChangeFlag kind="improved" />
                     ) : flag === "regressed" ? (
                       <ChangeFlag kind="regressed" />
-                    ) : flag === "unchanged" ? (
-                      <Chip>unchanged</Chip>
                     ) : (
-                      <Chip>pending</Chip>
+                      <Chip>unchanged</Chip>
                     )}
                   </td>
                 </tr>
@@ -175,6 +142,16 @@ export function ReportView({ project }: { project: Project }) {
             })}
           </tbody>
         </table>
+        <p className="mt-gp-lg text-mono-small text-text-muted">
+          Adjust grades in{" "}
+          <Link
+            href={`/projects/${project.id}/compare`}
+            className="text-accent hover:underline"
+          >
+            Compare
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

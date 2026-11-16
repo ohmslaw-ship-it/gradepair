@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { PageHeader } from "@/components/project/PageHeader";
 import { EmptyCasesPanel } from "@/components/project/EmptyCasesPanel";
 import { Button } from "@/components/ui/Button";
 import { ChangeFlag } from "@/components/ui/ChangeFlag";
-import { Chip } from "@/components/ui/Chip";
 import { GradeTag } from "@/components/ui/GradeTag";
-import { MonoBlock } from "@/components/ui/MonoBlock";
-import { StatCard } from "@/components/ui/StatCard";
+import { StatReadout } from "@/components/ui/StatReadout";
+import { StatReadoutStrip } from "@/components/ui/StatReadoutStrip";
 import { fieldClass } from "@/lib/form-styles";
 import { caseChangeFlag, passCount, summarizeCases } from "@/lib/metrics";
 import type { CaseGrade, Project } from "@/lib/types";
@@ -19,6 +19,7 @@ import { useGradepairStore } from "@/store/gradepair-store";
 type Filter = "all" | "regressed" | "improved" | "unchanged";
 
 export function CompareView({ project }: { project: Project }) {
+  const reduceMotion = useReducedMotion();
   const setGrade = useGradepairStore((s) => s.setGrade);
   const updateCase = useGradepairStore((s) => s.updateCase);
   const [filter, setFilter] = useState<Filter>("all");
@@ -26,6 +27,7 @@ export function CompareView({ project }: { project: Project }) {
   const [focusId, setFocusId] = useState<string | null>(
     project.cases[0]?.id ?? null,
   );
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const stats = useMemo(() => summarizeCases(project.cases), [project.cases]);
   const passA = passCount(project.cases, "A");
@@ -86,6 +88,10 @@ export function CompareView({ project }: { project: Project }) {
       } else if (e.key === "k" || e.key === "ArrowUp") {
         e.preventDefault();
         moveFocus(-1);
+      } else if (e.key === "Enter") {
+        if (focusId) {
+          setExpandedId((id) => (id === focusId ? null : focusId));
+        }
       } else if (e.key === "1") {
         gradeFocused("A", "pass");
       } else if (e.key === "2") {
@@ -98,7 +104,7 @@ export function CompareView({ project }: { project: Project }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [gradeFocused, moveFocus]);
+  }, [focusId, gradeFocused, moveFocus]);
 
   if (project.cases.length === 0) {
     return (
@@ -118,13 +124,13 @@ export function CompareView({ project }: { project: Project }) {
 
   const filters: { key: Filter; label: string; count: number }[] = [
     { key: "all", label: "All", count: total },
-    { key: "regressed", label: "Regressions", count: stats.regressed },
+    { key: "regressed", label: "Regressed", count: stats.regressed },
     { key: "improved", label: "Improved", count: stats.improved },
     { key: "unchanged", label: "Unchanged", count: stats.unchanged },
   ];
 
   return (
-    <div className="min-h-full bg-bg">
+    <div className="flex min-h-full flex-col bg-bg">
       <PageHeader
         breadcrumbs={[
           { label: "Projects", href: "/projects" },
@@ -132,8 +138,8 @@ export function CompareView({ project }: { project: Project }) {
           { label: "Compare" },
         ]}
         title={project.name}
-        meta={`${total} cases · Prompt ${project.promptA.version} vs ${project.promptB.version} · ${project.model} · ${project.lastRunLabel}`}
-        badge="Sample data"
+        meta={`${total} cases · ${project.promptA.version} vs ${project.promptB.version} · ${project.model} · ${project.lastRunLabel}`}
+        badge="Sample"
         actions={
           <>
             <Link href={`/projects/${project.id}/prompts`}>
@@ -146,36 +152,34 @@ export function CompareView({ project }: { project: Project }) {
         }
       />
 
-      <div className="grid gap-gp-lg border-b border-border px-gp-2xl py-gp-xl lg:grid-cols-[1fr_minmax(16rem,22rem)]">
-        <div className="grid gap-gp-md sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard
-            label="Prompt A passes"
-            value={`${passA}/${total}`}
-            detail={`${total ? Math.round((passA / total) * 100) : 0}% · ${project.promptA.version}`}
-          />
-          <StatCard
-            label="Prompt B passes"
-            value={`${passB}/${total}`}
-            detail={`${total ? Math.round((passB / total) * 100) : 0}% · ${project.promptB.version}`}
-          />
-          <StatCard label="Improved" value={String(stats.improved)} />
-          <StatCard label="Regressions" value={String(stats.regressed)} />
-        </div>
-        <aside className="rounded-gp-lg border border-border bg-accent-subtle p-gp-lg text-body-small">
-          <p className="text-label text-text-muted">Suggested call</p>
-          <p className="mt-gp-sm font-semibold text-text">
-            {stats.regressed === 0
-              ? "Ship B when you're comfortable with spot-checks."
-              : `Ship B after fixing ${stats.regressed} regression${stats.regressed === 1 ? "" : "s"}.`}
+      <StatReadoutStrip
+        aside={
+          <p className="text-mono-small text-text-muted">
+            <span className="text-label text-text">Suggested</span>
+            <span className="mt-gp-2xs block text-body-small text-text">
+              {stats.regressed === 0
+                ? "Ship B after spot-checks."
+                : `Fix ${stats.regressed} regression${stats.regressed === 1 ? "" : "s"}, then ship B.`}
+            </span>
           </p>
-          <p className="mt-gp-sm text-text-muted">
-            Your call — suggestion only, not a gate.
-          </p>
-        </aside>
-      </div>
+        }
+      >
+        <StatReadout
+          label="Prompt A"
+          value={`${passA}/${total}`}
+          detail={`${total ? Math.round((passA / total) * 100) : 0}% · ${project.promptA.version}`}
+        />
+        <StatReadout
+          label="Prompt B"
+          value={`${passB}/${total}`}
+          detail={`${total ? Math.round((passB / total) * 100) : 0}% · ${project.promptB.version}`}
+        />
+        <StatReadout label="Improved" value={String(stats.improved)} large={false} />
+        <StatReadout label="Regressed" value={String(stats.regressed)} large={false} />
+      </StatReadoutStrip>
 
-      <div className="flex flex-wrap items-center justify-between gap-gp-md border-b border-border px-gp-2xl py-gp-md">
-        <div className="flex flex-wrap gap-gp-sm" role="tablist" aria-label="Filter cases">
+      <div className="flex flex-wrap items-center gap-gp-md border-b border-border px-gp-2xl py-gp-sm">
+        <div className="flex flex-wrap gap-gp-2xs" role="tablist" aria-label="Filter cases">
           {filters.map((f) => (
             <button
               key={f.key}
@@ -183,141 +187,267 @@ export function CompareView({ project }: { project: Project }) {
               role="tab"
               aria-selected={filter === f.key}
               className={cn(
-                "rounded-gp-md px-gp-md py-gp-xs text-body-small",
+                "rounded-gp-xs border px-gp-sm py-gp-3xs text-mono-small tabular-nums",
                 filter === f.key
-                  ? "bg-surface-hover font-semibold text-text"
-                  : "text-text-muted hover:bg-surface-hover",
+                  ? "border-accent bg-accent-subtle text-text"
+                  : "border-transparent text-text-muted hover:border-border",
                 "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
               )}
               onClick={() => setFilter(f.key)}
             >
-              {f.label} ({f.count})
+              {f.label} {f.count}
             </button>
           ))}
         </div>
-        <label className="flex min-w-[12rem] flex-1 items-center gap-gp-sm sm:max-w-xs">
+        <label className="ml-auto flex min-w-[12rem] flex-1 items-center sm:max-w-xs">
           <span className="sr-only">Search cases</span>
           <input
             className={fieldClass}
-            placeholder="Search cases"
+            placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
-        <p className="text-body-small text-text-muted">
-          Shortcuts: j/k navigate · 1/2 grade A pass/fail · 3/4 grade B
-        </p>
       </div>
 
-      <div className="flex flex-col gap-gp-lg p-gp-2xl">
-        {filtered.map((c, index) => {
-          const flag = caseChangeFlag(c.gradeA, c.gradeB);
-          const focused = c.id === focusId;
-          return (
-            <article
-              key={c.id}
-              id={`case-${c.id}`}
-              tabIndex={focused ? 0 : -1}
-              className={cn(
-                "rounded-gp-lg border bg-surface p-gp-lg outline-none",
-                focused ? "border-border-strong ring-2 ring-focus" : "border-border",
-              )}
-              onFocus={() => setFocusId(c.id)}
-            >
-              <header className="flex flex-wrap items-center gap-gp-sm border-b border-border pb-gp-md">
-                <span className="text-mono-small text-text-muted">
-                  #{String(index + 1).padStart(2, "0")}
-                </span>
-                {flag === "improved" ? (
-                  <ChangeFlag kind="improved" />
-                ) : flag === "regressed" ? (
-                  <ChangeFlag kind="regressed" />
-                ) : null}
-                {c.tags?.map((t) => (
-                  <Chip key={t}>{t}</Chip>
-                ))}
-              </header>
-              <div className="mt-gp-md grid gap-gp-lg lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1.1fr)]">
-                <section>
-                  <h3 className="text-label text-text-muted">Case · input & pass rule</h3>
-                  <p className="mt-gp-sm text-body-small text-text">{c.input}</p>
-                  <p className="mt-gp-sm text-note text-text-muted">
-                    Pass if: {c.passRule}
-                  </p>
-                </section>
-                <section>
-                  <h3 className="text-label text-text-muted">
-                    Prompt A · {project.promptA.version}
-                  </h3>
-                  <MonoBlock className="mt-gp-sm">{c.outputA}</MonoBlock>
-                  <div className="mt-gp-sm flex flex-wrap items-center gap-gp-sm">
-                    <GradeTag grade={c.gradeA} />
-                    <button
-                      type="button"
-                      className="text-body-small text-text-muted underline-offset-2 hover:underline"
-                      onClick={() => setGrade(project.id, c.id, "A", "pass")}
-                    >
-                      Mark pass
-                    </button>
-                    <button
-                      type="button"
-                      className="text-body-small text-text-muted underline-offset-2 hover:underline"
-                      onClick={() => setGrade(project.id, c.id, "A", "fail")}
-                    >
-                      Mark fail
-                    </button>
-                  </div>
-                  <label className="mt-gp-sm block text-body-small text-text-muted">
-                    Note
-                  </label>
-                  <input
-                    className={fieldClass}
-                    value={c.noteA}
-                    onChange={(e) =>
-                      updateCase(project.id, c.id, { noteA: e.target.value })
-                    }
-                    aria-label={`Note for prompt A, case ${index + 1}`}
-                  />
-                </section>
-                <section>
-                  <h3 className="text-label text-text-muted">
-                    Prompt B · {project.promptB.version}
-                  </h3>
-                  <MonoBlock className="mt-gp-sm">{c.outputB}</MonoBlock>
-                  <div className="mt-gp-sm flex flex-wrap items-center gap-gp-sm">
-                    <GradeTag grade={c.gradeB} />
-                    <button
-                      type="button"
-                      className="text-body-small text-text-muted underline-offset-2 hover:underline"
-                      onClick={() => setGrade(project.id, c.id, "B", "pass")}
-                    >
-                      Mark pass
-                    </button>
-                    <button
-                      type="button"
-                      className="text-body-small text-text-muted underline-offset-2 hover:underline"
-                      onClick={() => setGrade(project.id, c.id, "B", "fail")}
-                    >
-                      Mark fail
-                    </button>
-                  </div>
-                  <label className="mt-gp-sm block text-body-small text-text-muted">
-                    Note
-                  </label>
-                  <input
-                    className={fieldClass}
-                    value={c.noteB}
-                    onChange={(e) =>
-                      updateCase(project.id, c.id, { noteB: e.target.value })
-                    }
-                    aria-label={`Note for prompt B, case ${index + 1}`}
-                  />
-                </section>
-              </div>
-            </article>
-          );
-        })}
+      <div className="min-h-0 flex-1 overflow-x-auto">
+        <table className="w-full min-w-[72rem] border-collapse text-left">
+          <caption className="sr-only">Comparison</caption>
+          <thead className="sticky top-0 z-10 bg-bg">
+            <tr className="border-b border-border text-label text-text-muted">
+              <th scope="col" className="w-14 px-gp-md py-gp-sm">#</th>
+              <th scope="col" className="min-w-[14rem] px-gp-md py-gp-sm">
+                Input · rule
+              </th>
+              <th scope="col" className="min-w-[16rem] px-gp-md py-gp-sm">
+                Output A
+              </th>
+              <th scope="col" className="w-24 px-gp-md py-gp-sm">Grade A</th>
+              <th scope="col" className="min-w-[16rem] px-gp-md py-gp-sm">
+                Output B
+              </th>
+              <th scope="col" className="w-24 px-gp-md py-gp-sm">Grade B</th>
+              <th scope="col" className="w-28 px-gp-md py-gp-sm">Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((c, index) => {
+              const flag = caseChangeFlag(c.gradeA, c.gradeB);
+              const selected = c.id === focusId;
+              const expanded = c.id === expandedId;
+              return (
+                <CompareRow
+                  key={c.id}
+                  index={index}
+                  selected={selected}
+                  expanded={expanded}
+                  reduceMotion={reduceMotion ?? false}
+                  caseId={c.id}
+                  projectId={project.id}
+                  input={c.input}
+                  passRule={c.passRule}
+                  outputA={c.outputA}
+                  outputB={c.outputB}
+                  noteA={c.noteA}
+                  noteB={c.noteB}
+                  gradeA={c.gradeA}
+                  gradeB={c.gradeB}
+                  flag={flag}
+                  onSelect={() => setFocusId(c.id)}
+                  onToggleExpand={() =>
+                    setExpandedId((id) => (id === c.id ? null : c.id))
+                  }
+                  onGradeA={(g) => setGrade(project.id, c.id, "A", g)}
+                  onGradeB={(g) => setGrade(project.id, c.id, "B", g)}
+                  onNoteA={(n) => updateCase(project.id, c.id, { noteA: n })}
+                  onNoteB={(n) => updateCase(project.id, c.id, { noteB: n })}
+                />
+              );
+            })}
+          </tbody>
+        </table>
       </div>
+
+      <footer className="mt-auto border-t border-border bg-surface px-gp-2xl py-gp-sm text-mono-small text-text-muted">
+        j/k row · Enter notes · 1/2 grade A · 3/4 grade B
+      </footer>
     </div>
+  );
+}
+
+function CompareRow({
+  index,
+  selected,
+  expanded,
+  reduceMotion,
+  input,
+  passRule,
+  outputA,
+  outputB,
+  noteA,
+  noteB,
+  gradeA,
+  gradeB,
+  flag,
+  onSelect,
+  onToggleExpand,
+  onGradeA,
+  onGradeB,
+  onNoteA,
+  onNoteB,
+}: {
+  index: number;
+  selected: boolean;
+  expanded: boolean;
+  reduceMotion: boolean;
+  caseId: string;
+  projectId: string;
+  input: string;
+  passRule: string;
+  outputA: string;
+  outputB: string;
+  noteA: string;
+  noteB: string;
+  gradeA: CaseGrade | null;
+  gradeB: CaseGrade | null;
+  flag: ReturnType<typeof caseChangeFlag>;
+  onSelect: () => void;
+  onToggleExpand: () => void;
+  onGradeA: (g: CaseGrade) => void;
+  onGradeB: (g: CaseGrade) => void;
+  onNoteA: (n: string) => void;
+  onNoteB: (n: string) => void;
+}) {
+  return (
+    <>
+      <tr
+        className={cn(
+          "border-b border-border align-top",
+          selected && "bg-accent-subtle",
+        )}
+        onClick={onSelect}
+      >
+        <td className="relative px-gp-md py-gp-md">
+          {selected ? (
+            <span
+              aria-hidden
+              className="absolute bottom-0 left-0 top-0 w-0.5 bg-accent"
+            />
+          ) : null}
+          <span className="text-mono-small text-text-muted tabular-nums">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </td>
+        <td className="px-gp-md py-gp-md">
+          <p className="text-body-small text-text">{input}</p>
+          <p className="mt-gp-2xs text-mono-small text-text-muted">
+            Pass if: {passRule}
+          </p>
+          <button
+            type="button"
+            className="mt-gp-sm text-mono-small text-accent hover:underline"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleExpand();
+            }}
+          >
+            {expanded ? "Hide notes" : "Notes"}
+          </button>
+        </td>
+        <td className="px-gp-md py-gp-md text-mono text-text">{outputA}</td>
+        <td className="px-gp-md py-gp-md">
+          <GradeTag grade={gradeA} />
+          <div className="mt-gp-2xs flex gap-gp-2xs">
+            <button
+              type="button"
+              className="text-mono-small text-text-muted hover:text-pass"
+              onClick={(e) => {
+                e.stopPropagation();
+                onGradeA("pass");
+              }}
+            >
+              1
+            </button>
+            <button
+              type="button"
+              className="text-mono-small text-text-muted hover:text-fail"
+              onClick={(e) => {
+                e.stopPropagation();
+                onGradeA("fail");
+              }}
+            >
+              2
+            </button>
+          </div>
+        </td>
+        <td className="px-gp-md py-gp-md text-mono text-text">{outputB}</td>
+        <td className="px-gp-md py-gp-md">
+          <GradeTag grade={gradeB} />
+          <div className="mt-gp-2xs flex gap-gp-2xs">
+            <button
+              type="button"
+              className="text-mono-small text-text-muted hover:text-pass"
+              onClick={(e) => {
+                e.stopPropagation();
+                onGradeB("pass");
+              }}
+            >
+              3
+            </button>
+            <button
+              type="button"
+              className="text-mono-small text-text-muted hover:text-fail"
+              onClick={(e) => {
+                e.stopPropagation();
+                onGradeB("fail");
+              }}
+            >
+              4
+            </button>
+          </div>
+        </td>
+        <td className="px-gp-md py-gp-md">
+          {flag === "improved" ? (
+            <ChangeFlag kind="improved" />
+          ) : flag === "regressed" ? (
+            <ChangeFlag kind="regressed" />
+          ) : (
+            <span className="text-mono-small text-text-muted">—</span>
+          )}
+        </td>
+      </tr>
+      <AnimatePresence initial={false}>
+        {expanded ? (
+          <tr className="border-b border-border bg-surface-recessed">
+            <td colSpan={7} className="px-gp-2xl py-gp-md">
+              <motion.div
+                initial={reduceMotion ? false : { opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+                transition={{ duration: 0.14 }}
+                className="grid gap-gp-md lg:grid-cols-2"
+              >
+                <label className="block text-label text-text-muted">
+                  Note A
+                  <input
+                    className={cn(fieldClass, "mt-gp-2xs")}
+                    value={noteA}
+                    onChange={(e) => onNoteA(e.target.value)}
+                  />
+                </label>
+                <label className="block text-label text-text-muted">
+                  Note B
+                  <input
+                    className={cn(fieldClass, "mt-gp-2xs")}
+                    value={noteB}
+                    onChange={(e) => onNoteB(e.target.value)}
+                  />
+                </label>
+              </motion.div>
+            </td>
+          </tr>
+        ) : null}
+      </AnimatePresence>
+    </>
   );
 }
