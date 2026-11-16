@@ -11,20 +11,17 @@ export function StatReadoutStrip({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "flex flex-wrap items-stretch border-y border-border bg-surface",
-        className,
-      )}
-    >
-      <div className="flex min-w-0 flex-1 flex-wrap divide-x divide-border">
-        {children}
+    <div className={cn("px-8 py-6", className)}>
+      <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+        <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {children}
+        </div>
+        {aside ? (
+          <aside className="min-w-0 rounded-[20px] bg-[#F6F7FE] p-6 lg:max-w-xs">
+            {aside}
+          </aside>
+        ) : null}
       </div>
-      {aside ? (
-        <aside className="w-full border-t border-border px-gp-lg py-gp-md lg:w-auto lg:max-w-xs lg:border-t-0 lg:border-l">
-          {aside}
-        </aside>
-      ) : null}
     </div>
   );
 }

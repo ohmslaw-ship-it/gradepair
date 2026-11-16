@@ -17,18 +17,25 @@ export function StatReadout({
   large = true,
 }: StatReadoutProps) {
   return (
-    <div className={cn("min-w-0 flex-1 px-gp-lg py-gp-md", className)}>
+    <div
+      className={cn(
+        "min-w-0 flex-1 rounded-[20px] bg-[#F6F7FE] p-6",
+        className,
+      )}
+    >
       <p className="text-label text-text-muted">{label}</p>
       <p
         className={cn(
-          large ? "text-score tabular-nums text-text" : "text-h2 tabular-nums",
+          large
+            ? "text-score tabular-nums text-text"
+            : "text-[22px] font-bold leading-none tabular-nums text-text",
           "mt-gp-2xs",
         )}
       >
         {value}
       </p>
       {detail ? (
-        <p className="mt-gp-2xs text-mono-small text-text-muted tabular-nums">
+        <p className="mt-gp-2xs text-[14px] text-text-muted tabular-nums">
           {detail}
         </p>
       ) : null}

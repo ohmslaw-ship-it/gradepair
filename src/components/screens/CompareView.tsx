@@ -108,7 +108,7 @@ export function CompareView({ project }: { project: Project }) {
 
   if (project.cases.length === 0) {
     return (
-      <div className="min-h-full bg-bg">
+      <div className="min-h-full">
         <PageHeader
           breadcrumbs={[
             { label: "Projects", href: "/projects" },
@@ -130,7 +130,7 @@ export function CompareView({ project }: { project: Project }) {
   ];
 
   return (
-    <div className="flex min-h-full flex-col bg-bg">
+    <div className="flex min-h-full flex-col">
       <PageHeader
         breadcrumbs={[
           { label: "Projects", href: "/projects" },
@@ -154,14 +154,14 @@ export function CompareView({ project }: { project: Project }) {
 
       <StatReadoutStrip
         aside={
-          <p className="text-mono-small text-text-muted">
-            <span className="text-label text-text">Suggested</span>
-            <span className="mt-gp-2xs block text-body-small text-text">
+          <div>
+            <p className="text-label text-text-muted">Suggested</p>
+            <p className="mt-gp-2xs text-[14px] text-text">
               {stats.regressed === 0
                 ? "Ship B after spot-checks."
                 : `Fix ${stats.regressed} regression${stats.regressed === 1 ? "" : "s"}, then ship B.`}
-            </span>
-          </p>
+            </p>
+          </div>
         }
       >
         <StatReadout
@@ -178,8 +178,12 @@ export function CompareView({ project }: { project: Project }) {
         <StatReadout label="Regressed" value={String(stats.regressed)} large={false} />
       </StatReadoutStrip>
 
-      <div className="flex flex-wrap items-center gap-gp-md border-b border-border px-gp-2xl py-gp-sm">
-        <div className="flex flex-wrap gap-gp-2xs" role="tablist" aria-label="Filter cases">
+      <div className="flex flex-wrap items-center gap-gp-md px-8 py-4">
+        <div
+          className="flex gap-1 rounded-full bg-[#F1F3FF] p-1"
+          role="tablist"
+          aria-label="Filter cases"
+        >
           {filters.map((f) => (
             <button
               key={f.key}
@@ -187,10 +191,10 @@ export function CompareView({ project }: { project: Project }) {
               role="tab"
               aria-selected={filter === f.key}
               className={cn(
-                "rounded-gp-xs border px-gp-sm py-gp-3xs text-mono-small tabular-nums",
+                "rounded-full px-4 py-2 text-[14px] font-medium tabular-nums",
                 filter === f.key
-                  ? "border-accent bg-accent-subtle text-text"
-                  : "border-transparent text-text-muted hover:border-border",
+                  ? "bg-white text-text shadow-[0_4px_14px_-4px_rgba(5,5,69,0.18)]"
+                  : "text-text-muted hover:text-text",
                 "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
               )}
               onClick={() => setFilter(f.key)}
@@ -210,24 +214,32 @@ export function CompareView({ project }: { project: Project }) {
         </label>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-x-auto">
-        <table className="w-full min-w-[72rem] border-collapse text-left">
+      <div className="min-h-0 flex-1 overflow-x-auto px-2 pb-2">
+        <table className="w-full min-w-[72rem] border-collapse text-left text-[15px]">
           <caption className="sr-only">Comparison</caption>
-          <thead className="sticky top-0 z-10 bg-bg">
-            <tr className="border-b border-border text-label text-text-muted">
-              <th scope="col" className="w-14 px-gp-md py-gp-sm">#</th>
-              <th scope="col" className="min-w-[14rem] px-gp-md py-gp-sm">
+          <thead className="sticky top-0 z-10 bg-white">
+            <tr className="border-b border-[#F0F1F8] text-label text-text-muted">
+              <th scope="col" className="w-14 px-5 py-4">
+                #
+              </th>
+              <th scope="col" className="min-w-[14rem] px-5 py-4">
                 Input · rule
               </th>
-              <th scope="col" className="min-w-[16rem] px-gp-md py-gp-sm">
+              <th scope="col" className="min-w-[16rem] px-5 py-4">
                 Output A
               </th>
-              <th scope="col" className="w-24 px-gp-md py-gp-sm">Grade A</th>
-              <th scope="col" className="min-w-[16rem] px-gp-md py-gp-sm">
+              <th scope="col" className="w-28 px-5 py-4">
+                Grade A
+              </th>
+              <th scope="col" className="min-w-[16rem] px-5 py-4">
                 Output B
               </th>
-              <th scope="col" className="w-24 px-gp-md py-gp-sm">Grade B</th>
-              <th scope="col" className="w-28 px-gp-md py-gp-sm">Change</th>
+              <th scope="col" className="w-28 px-5 py-4">
+                Grade B
+              </th>
+              <th scope="col" className="w-32 px-5 py-4">
+                Change
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -268,7 +280,7 @@ export function CompareView({ project }: { project: Project }) {
         </table>
       </div>
 
-      <footer className="mt-auto border-t border-border bg-surface px-gp-2xl py-gp-sm text-mono-small text-text-muted">
+      <footer className="mt-auto px-8 py-4 text-[13px] text-text-muted">
         j/k row · Enter notes · 1/2 grade A · 3/4 grade B
       </footer>
     </div>
@@ -322,30 +334,30 @@ function CompareRow({
     <>
       <tr
         className={cn(
-          "border-b border-border align-top",
-          selected && "bg-accent-subtle",
+          "hover-table-row border-b border-[#F0F1F8] align-top",
+          selected && "bg-[#EEEAFE]",
         )}
         onClick={onSelect}
       >
-        <td className="relative px-gp-md py-gp-md">
+        <td className="relative px-5 py-4">
           {selected ? (
             <span
               aria-hidden
-              className="absolute bottom-0 left-0 top-0 w-0.5 bg-accent"
+              className="absolute bottom-0 left-0 top-0 w-[3px] bg-[#6B5BD6]"
             />
           ) : null}
-          <span className="text-mono-small text-text-muted tabular-nums">
+          <span className="text-[14px] text-text-muted tabular-nums">
             {String(index + 1).padStart(2, "0")}
           </span>
         </td>
-        <td className="px-gp-md py-gp-md">
-          <p className="text-body-small text-text">{input}</p>
-          <p className="mt-gp-2xs text-mono-small text-text-muted">
+        <td className="px-5 py-4">
+          <p className="text-[15px] text-text">{input}</p>
+          <p className="mt-gp-2xs text-[13px] text-text-muted">
             Pass if: {passRule}
           </p>
           <button
             type="button"
-            className="mt-gp-sm text-mono-small text-accent hover:underline"
+            className="mt-gp-sm text-[13px] text-accent hover:underline"
             onClick={(e) => {
               e.stopPropagation();
               onToggleExpand();
@@ -354,13 +366,17 @@ function CompareRow({
             {expanded ? "Hide notes" : "Notes"}
           </button>
         </td>
-        <td className="px-gp-md py-gp-md text-mono text-text">{outputA}</td>
-        <td className="px-gp-md py-gp-md">
+        <td className="px-5 py-4">
+          <div className="rounded-[12px] bg-[#F6F7FE] p-3 text-mono text-text">
+            {outputA}
+          </div>
+        </td>
+        <td className="px-5 py-4">
           <GradeTag grade={gradeA} />
           <div className="mt-gp-2xs flex gap-gp-2xs">
             <button
               type="button"
-              className="text-mono-small text-text-muted hover:text-pass"
+              className="text-[12px] text-text-muted hover:text-pass"
               onClick={(e) => {
                 e.stopPropagation();
                 onGradeA("pass");
@@ -370,7 +386,7 @@ function CompareRow({
             </button>
             <button
               type="button"
-              className="text-mono-small text-text-muted hover:text-fail"
+              className="text-[12px] text-text-muted hover:text-fail"
               onClick={(e) => {
                 e.stopPropagation();
                 onGradeA("fail");
@@ -380,13 +396,17 @@ function CompareRow({
             </button>
           </div>
         </td>
-        <td className="px-gp-md py-gp-md text-mono text-text">{outputB}</td>
-        <td className="px-gp-md py-gp-md">
+        <td className="px-5 py-4">
+          <div className="rounded-[12px] bg-[#F6F7FE] p-3 text-mono text-text">
+            {outputB}
+          </div>
+        </td>
+        <td className="px-5 py-4">
           <GradeTag grade={gradeB} />
           <div className="mt-gp-2xs flex gap-gp-2xs">
             <button
               type="button"
-              className="text-mono-small text-text-muted hover:text-pass"
+              className="text-[12px] text-text-muted hover:text-pass"
               onClick={(e) => {
                 e.stopPropagation();
                 onGradeB("pass");
@@ -396,7 +416,7 @@ function CompareRow({
             </button>
             <button
               type="button"
-              className="text-mono-small text-text-muted hover:text-fail"
+              className="text-[12px] text-text-muted hover:text-fail"
               onClick={(e) => {
                 e.stopPropagation();
                 onGradeB("fail");
@@ -406,20 +426,20 @@ function CompareRow({
             </button>
           </div>
         </td>
-        <td className="px-gp-md py-gp-md">
+        <td className="px-5 py-4">
           {flag === "improved" ? (
             <ChangeFlag kind="improved" />
           ) : flag === "regressed" ? (
             <ChangeFlag kind="regressed" />
           ) : (
-            <span className="text-mono-small text-text-muted">—</span>
+            <span className="text-[13px] text-text-muted">—</span>
           )}
         </td>
       </tr>
       <AnimatePresence initial={false}>
         {expanded ? (
-          <tr className="border-b border-border bg-surface-recessed">
-            <td colSpan={7} className="px-gp-2xl py-gp-md">
+          <tr className="border-b border-[#F0F1F8] bg-surface-recessed">
+            <td colSpan={7} className="px-8 py-4">
               <motion.div
                 initial={reduceMotion ? false : { opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}

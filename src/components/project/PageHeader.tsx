@@ -18,10 +18,10 @@ export function PageHeader({
   badge,
 }: PageHeaderProps) {
   return (
-    <header className="border-b border-border bg-bg">
-      <div className="lab-grid items-end gap-y-gp-md py-gp-xl">
-        <div className="col-span-12 lg:col-span-8">
-          <nav aria-label="Breadcrumb" className="text-mono-small text-text-muted">
+    <header className="px-8 pb-6 pt-8">
+      <div className="flex flex-wrap items-end gap-y-4">
+        <div className="min-w-0 flex-1">
+          <nav aria-label="Breadcrumb" className="text-[14px] text-text-muted">
             <ol className="flex flex-wrap items-center gap-gp-xs">
               {breadcrumbs.map((crumb, i) => (
                 <li key={crumb.label} className="flex items-center gap-gp-xs">
@@ -41,17 +41,17 @@ export function PageHeader({
             </ol>
           </nav>
           <div className="mt-gp-md flex flex-wrap items-baseline gap-gp-md">
-            <h1 className="text-h1">{title}</h1>
+            <h1 className="text-h1 text-text">{title}</h1>
             {badge ? <Chip>{badge}</Chip> : null}
           </div>
           {meta ? (
-            <p className="mt-gp-sm max-w-3xl text-body-small text-text-muted">
+            <p className="mt-gp-sm max-w-3xl text-[14px] text-text-muted">
               {meta}
             </p>
           ) : null}
         </div>
         {actions ? (
-          <div className="col-span-12 flex flex-wrap justify-start gap-gp-sm lg:col-span-4 lg:justify-end">
+          <div className="flex flex-wrap justify-start gap-gp-sm sm:justify-end">
             {actions}
           </div>
         ) : null}

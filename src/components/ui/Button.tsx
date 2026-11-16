@@ -9,11 +9,12 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-accent text-text-on-accent border border-accent hover:opacity-90",
+  primary:
+    "bg-[#050545] text-white hover:shadow-[0_8px_24px_rgba(184,169,254,0.45)]",
   secondary:
-    "bg-surface text-text border border-border-strong hover:bg-surface-hover",
+    "border border-[#E4E7FB] bg-white text-[#050545] hover:bg-surface-hover",
   ghost:
-    "bg-transparent text-text border border-transparent hover:bg-surface-hover",
+    "border border-transparent bg-transparent text-text hover:bg-surface-hover",
 };
 
 export function Button({
@@ -27,9 +28,9 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex items-center justify-center gap-gp-sm rounded-gp-xs px-gp-md py-gp-xs text-body-small font-medium transition-opacity duration-150",
+        "inline-flex h-11 items-center justify-center gap-gp-sm rounded-full px-6 text-[15px] font-semibold",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-        "motion-safe:transition-opacity disabled:cursor-not-allowed disabled:opacity-40",
+        "motion-safe:transition-shadow disabled:cursor-not-allowed disabled:opacity-40",
         variantClasses[variant],
         className,
       )}
