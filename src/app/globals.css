@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+:root {
+  --gp-bg: #fbf4e9;
+  --gp-surface: #ffffff;
+  --gp-surface-recessed: #f7eedf;
+  --gp-surface-hover: #f2e7d5;
+  --gp-text: #211c18;
+  --gp-text-muted: #6a5f54;
+  --gp-text-on-accent: #211c18;
+  --gp-border: #e8dcca;
+  --gp-border-strong: #211c18;
+  --gp-accent: #ffb224;
+  --gp-accent-subtle: #ffd27a;
+  --gp-pass: #17794a;
+  --gp-pass-subtle: #ddf3e4;
+  --gp-fail: #c8291e;
+  --gp-fail-subtle: #fce4e1;
+  --gp-regression: #ffe27a;
+  --gp-regression-text: #211c18;
+  --gp-improved: #17794a;
+  --gp-improved-subtle: #ddf3e4;
+  --gp-focus: #2456d6;
+  --gp-diff-added: #ddf3e4;
+  --gp-diff-removed: #fce4e1;
+
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 6px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 40px;
+  --space-5xl: 48px;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+}
+
+@theme inline {
+  --color-bg: var(--gp-bg);
+  --color-surface: var(--gp-surface);
+  --color-surface-recessed: var(--gp-surface-recessed);
+  --color-surface-hover: var(--gp-surface-hover);
+  --color-text: var(--gp-text);
+  --color-text-muted: var(--gp-text-muted);
+  --color-text-on-accent: var(--gp-text-on-accent);
+  --color-border: var(--gp-border);
+  --color-border-strong: var(--gp-border-strong);
+  --color-accent: var(--gp-accent);
+  --color-accent-subtle: var(--gp-accent-subtle);
+  --color-pass: var(--gp-pass);
+  --color-pass-subtle: var(--gp-pass-subtle);
+  --color-fail: var(--gp-fail);
+  --color-fail-subtle: var(--gp-fail-subtle);
+  --color-regression: var(--gp-regression);
+  --color-regression-text: var(--gp-regression-text);
+  --color-improved: var(--gp-improved);
+  --color-improved-subtle: var(--gp-improved-subtle);
+  --color-focus: var(--gp-focus);
+  --color-diff-added: var(--gp-diff-added);
+  --color-diff-removed: var(--gp-diff-removed);
+
+  --spacing-3xs: var(--space-3xs);
+  --spacing-2xs: var(--space-2xs);
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
+  --spacing-2xl: var(--space-2xl);
+  --spacing-3xl: var(--space-3xl);
+  --spacing-4xl: var(--space-4xl);
+  --spacing-5xl: var(--space-5xl);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-full: var(--radius-full);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --font-grade: var(--font-grade);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background: var(--gp-bg);
+  color: var(--gp-text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.text-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.text-h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-body-strong {
+  font-weight: 600;
+}
+
+.text-body-small {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.text-note {
+  font-size: 12px;
+  line-height: 16px;
+  font-style: italic;
+}
+
+.text-label {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.text-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.text-mono-small {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.text-grade {
+  font-family: var(--font-grade), cursive;
+  font-size: 19px;
+  line-height: 20px;
+  font-weight: 700;
+}
