@@ -12,14 +12,14 @@ export function StatCard({ label, value, detail, className }: StatCardProps) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-border bg-surface p-lg",
+        "rounded-gp-lg border border-border bg-surface p-gp-lg",
         className,
       )}
     >
       <p className="text-label text-text-muted">{label}</p>
-      <p className="mt-sm text-h2">{value}</p>
+      <p className="mt-gp-sm text-h2">{value}</p>
       {detail ? (
-        <p className="mt-2xs text-body-small text-text-muted">{detail}</p>
+        <p className="mt-gp-2xs text-body-small text-text-muted">{detail}</p>
       ) : null}
     </div>
   );

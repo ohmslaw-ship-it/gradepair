@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${fontClassNames} h-full antialiased`}>
-      <body className="min-h-full">
+      <body className="min-h-full bg-bg text-text">
         <AppShell>{children}</AppShell>
       </body>
     </html>

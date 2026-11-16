@@ -11,16 +11,16 @@ export function MonoBlock({ children, header, className }: MonoBlockProps) {
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-sm border border-border bg-surface-recessed",
+        "overflow-hidden rounded-gp-sm border border-border bg-surface-recessed",
         className,
       )}
     >
       {header ? (
-        <div className="border-b border-border px-md py-sm text-body-small text-text-muted">
+        <div className="border-b border-border px-gp-md py-gp-sm text-body-small text-text-muted">
           {header}
         </div>
       ) : null}
-      <div className="text-mono whitespace-pre-wrap p-md text-text">{children}</div>
+      <div className="text-mono whitespace-pre-wrap p-gp-md text-text">{children}</div>
     </div>
   );
 }

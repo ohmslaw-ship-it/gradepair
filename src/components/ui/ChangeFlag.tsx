@@ -40,7 +40,7 @@ export function ChangeFlag({ kind, className }: ChangeFlagProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2xs rounded-xs px-sm py-3xs text-label",
+        "inline-flex items-center gap-gp-2xs rounded-gp-xs px-gp-sm py-gp-3xs text-label",
         isRegression
           ? "bg-regression text-regression-text"
           : "bg-improved-subtle text-improved",

@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/*
+ * Gradepair tokens (call1.js). Spacing/radius use `--spacing-gp-*` and
+ * `--radius-gp-*` in @theme so we do not override Tailwind's default
+ * spacing scale (max-w-md, w-xl, …) or default radius keys.
+ */
+
 :root {
   --gp-bg: #fbf4e9;
   --gp-surface: #ffffff;
@@ -23,72 +29,49 @@
   --gp-focus: #2456d6;
   --gp-diff-added: #ddf3e4;
   --gp-diff-removed: #fce4e1;
-
-  --space-3xs: 2px;
-  --space-2xs: 4px;
-  --space-xs: 6px;
-  --space-sm: 8px;
-  --space-md: 12px;
-  --space-lg: 16px;
-  --space-xl: 20px;
-  --space-2xl: 24px;
-  --space-3xl: 32px;
-  --space-4xl: 40px;
-  --space-5xl: 48px;
-
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-full: 999px;
 }
 
 @theme inline {
-  --color-bg: var(--gp-bg);
-  --color-surface: var(--gp-surface);
-  --color-surface-recessed: var(--gp-surface-recessed);
-  --color-surface-hover: var(--gp-surface-hover);
-  --color-text: var(--gp-text);
-  --color-text-muted: var(--gp-text-muted);
-  --color-text-on-accent: var(--gp-text-on-accent);
-  --color-border: var(--gp-border);
-  --color-border-strong: var(--gp-border-strong);
-  --color-accent: var(--gp-accent);
-  --color-accent-subtle: var(--gp-accent-subtle);
-  --color-pass: var(--gp-pass);
-  --color-pass-subtle: var(--gp-pass-subtle);
-  --color-fail: var(--gp-fail);
-  --color-fail-subtle: var(--gp-fail-subtle);
-  --color-regression: var(--gp-regression);
-  --color-regression-text: var(--gp-regression-text);
-  --color-improved: var(--gp-improved);
-  --color-improved-subtle: var(--gp-improved-subtle);
-  --color-focus: var(--gp-focus);
-  --color-diff-added: var(--gp-diff-added);
-  --color-diff-removed: var(--gp-diff-removed);
+  --color-bg: #fbf4e9;
+  --color-surface: #ffffff;
+  --color-surface-recessed: #f7eedf;
+  --color-surface-hover: #f2e7d5;
+  --color-text: #211c18;
+  --color-text-muted: #6a5f54;
+  --color-text-on-accent: #211c18;
+  --color-border: #e8dcca;
+  --color-border-strong: #211c18;
+  --color-accent: #ffb224;
+  --color-accent-subtle: #ffd27a;
+  --color-pass: #17794a;
+  --color-pass-subtle: #ddf3e4;
+  --color-fail: #c8291e;
+  --color-fail-subtle: #fce4e1;
+  --color-regression: #ffe27a;
+  --color-regression-text: #211c18;
+  --color-improved: #17794a;
+  --color-improved-subtle: #ddf3e4;
+  --color-focus: #2456d6;
+  --color-diff-added: #ddf3e4;
+  --color-diff-removed: #fce4e1;
 
-  --spacing-3xs: var(--space-3xs);
-  --spacing-2xs: var(--space-2xs);
-  --spacing-xs: var(--space-xs);
-  --spacing-sm: var(--space-sm);
-  --spacing-md: var(--space-md);
-  --spacing-lg: var(--space-lg);
-  --spacing-xl: var(--space-xl);
-  --spacing-2xl: var(--space-2xl);
-  --spacing-3xl: var(--space-3xl);
-  --spacing-4xl: var(--space-4xl);
-  --spacing-5xl: var(--space-5xl);
+  --spacing-gp-3xs: 2px;
+  --spacing-gp-2xs: 4px;
+  --spacing-gp-xs: 6px;
+  --spacing-gp-sm: 8px;
+  --spacing-gp-md: 12px;
+  --spacing-gp-lg: 16px;
+  --spacing-gp-xl: 20px;
+  --spacing-gp-2xl: 24px;
+  --spacing-gp-3xl: 32px;
+  --spacing-gp-4xl: 40px;
+  --spacing-gp-5xl: 48px;
 
-  --radius-xs: var(--radius-xs);
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-full: var(--radius-full);
-
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
-  --font-mono: var(--font-mono);
-  --font-grade: var(--font-grade);
+  --radius-gp-xs: 4px;
+  --radius-gp-sm: 6px;
+  --radius-gp-md: 8px;
+  --radius-gp-lg: 12px;
+  --radius-gp-full: 999px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -103,7 +86,7 @@
 }
 
 body {
-  background: var(--gp-bg);
+  background-color: var(--gp-bg);
   color: var(--gp-text);
   font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;

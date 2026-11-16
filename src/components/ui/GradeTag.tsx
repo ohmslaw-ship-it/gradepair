@@ -53,7 +53,7 @@ export function GradeTag({ grade, className }: GradeTagProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2xs rounded-full border px-sm py-3xs",
+        "inline-flex items-center gap-gp-2xs rounded-gp-full border px-gp-sm py-gp-3xs",
         isPass ? "border-pass text-pass" : "border-fail text-fail",
         className,
       )}

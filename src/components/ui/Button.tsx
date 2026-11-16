@@ -27,7 +27,7 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex items-center justify-center gap-sm rounded-md px-lg py-sm text-sm font-semibold transition-[transform,box-shadow,background-color] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+        "inline-flex items-center justify-center gap-gp-sm rounded-gp-md px-gp-lg py-gp-sm text-sm font-semibold transition-[transform,box-shadow,background-color] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
         "motion-safe:transition-transform",
         variantClasses[variant],
         className,
