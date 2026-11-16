@@ -2,14 +2,14 @@
 
 **Unit tests for your AI feature, built for PMs, not engineers.**
 
-Gradepair is a portfolio product for comparing two prompt versions (A vs B) on plain-language test cases, grading outputs pass/fail with notes, and surfacing regressions before ship. It is aimed at product people—not eval engineers running YAML, traces, or SDKs.
+Gradepair lets product people compare prompt A vs B on plain-language test cases, grade outputs pass/fail with notes, and see regressions before ship. Stage 4 adds the full demo workflow with **sample data only** (no live model calls).
 
 ## Stack
 
-- [Next.js](https://nextjs.org/) (App Router, TypeScript)
-- [Tailwind CSS](https://tailwindcss.com/) v4 with design tokens from Figma
-- [Motion](https://motion.dev/) for React (subtle, `prefers-reduced-motion` aware)
-- Fonts: Bricolage Grotesque, Hanken Grotesk, Geist Mono, Caveat (`next/font/google`)
+- Next.js (App Router, TypeScript)
+- Tailwind CSS v4 — design tokens in `src/app/globals.css` (`@theme` + `gp` spacing/radius namespace)
+- Zustand + `localStorage` for edits and grades
+- Motion for React (subtle transitions; `prefers-reduced-motion` respected)
 
 ## Getting started
 
@@ -18,20 +18,29 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The home page is a **kitchen sink** that shows tokens, typography, and base UI components.
+- `/` → redirects to **`/projects`**
+- **`/dev/kitchen-sink`** — token/component checker (Stage 3)
 
 ```bash
 npm run build
 npm run lint
 ```
 
+## Routes (Stage 4)
+
+| Route | Screen |
+|-------|--------|
+| `/projects` | Project list |
+| `/projects/[id]/cases` | Test case editor |
+| `/projects/[id]/prompts` | Prompt A vs B (equal-height cards) |
+| `/projects/[id]/compare` | Comparison + grading (`j`/`k`, `1`–`4` shortcuts) |
+| `/projects/[id]/report` | Summary & regression report |
+
+Demo seed data lives in `src/data/` (`SEED_PROJECTS`). The **Hinglish notifications** project is intentionally empty for the empty-state flow.
+
 ## Project status
 
-**Stage 3: foundations** — App scaffold, semantic colour/spacing/radius tokens, base components, app shell sidebar, typed sample data (`src/data/sample.ts`). Full product screens (compare table, run flow, settings) are not built yet.
-
-## Sample data
-
-`src/data/sample.ts` defines the fictional **AdsGPT ad-copy assistant** project and six cases used in the Figma comparison screen. Marked as sample/demo data only.
+**Stage 4: product screens** — All six flows above, local persistence, honest demo banner. Live API runs and auth are out of scope.
 
 ## License
 
