@@ -1,9 +1,10 @@
+import { Chip } from "@/components/ui/Chip";
 import { cn } from "@/lib/cn";
 
 export type Grade = "pass" | "fail";
 
 export type GradeTagProps = {
-  grade: Grade;
+  grade: Grade | null;
   className?: string;
 };
 
@@ -49,6 +50,9 @@ function FailIcon() {
 }
 
 export function GradeTag({ grade, className }: GradeTagProps) {
+  if (grade === null) {
+    return <Chip className={className}>Ungraded</Chip>;
+  }
   const isPass = grade === "pass";
   return (
     <span
